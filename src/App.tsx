@@ -15,6 +15,12 @@ import postThree from './assets/instagram/DZ5HZauyYYl.jpg'
 import postFour from './assets/instagram/DXEqgqLEVFy.jpg'
 import postFive from './assets/instagram/DX9dpq8R1_I.jpg'
 import postSix from './assets/instagram/DZlQDY9pdco.jpg'
+import videoOne from './assets/instagram/optimized/DZFuXkkxMFy.mp4'
+import videoTwo from './assets/instagram/optimized/DZDJjLJRLyL.mp4'
+import videoThree from './assets/instagram/optimized/DZ5HZauyYYl.mp4'
+import videoFour from './assets/instagram/optimized/DXEqgqLEVFy.mp4'
+import videoFive from './assets/instagram/optimized/DX9dpq8R1_I.mp4'
+import videoSix from './assets/instagram/optimized/DZlQDY9pdco.mp4'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,6 +28,7 @@ const contactNumber = '5511971040525'
 const mapsEmbedUrl = 'https://www.google.com/maps?q=Rua%20Jos%C3%A9%20Maria%20Lisboa%2C%20860%2C%20Jardim%20Paulista%2C%20S%C3%A3o%20Paulo%2C%20SP&output=embed'
 const instagramPosts = ['DZFuXkkxMFy', 'DZDJjLJRLyL', 'DZ5HZauyYYl', 'DXEqgqLEVFy', 'DX9dpq8R1_I', 'DZlQDY9pdco']
 const instagramCovers = [postOne, postTwo, postThree, postFour, postFive, postSix]
+const instagramVideos = [videoOne, videoTwo, videoThree, videoFour, videoFive, videoSix]
 const instagramCarouselPosts = [...instagramPosts, ...instagramPosts]
 const questions = [
   { question: 'Quem pode fazer transplante capilar?', answer: 'A indicação depende de uma avaliação médica individual. É preciso entender a causa da perda capilar, o estado do couro cabeludo, a área doadora e as expectativas de cada pessoa.' },
@@ -87,9 +94,11 @@ function InstagramCarousel() {
     const tick = (time: number) => {
       const delta = Math.min(time - lastTime, 50)
       lastTime = time
-      const loopWidth = element.scrollWidth / 2
+      const firstItem = element.children[0] as HTMLElement | undefined
+      const loopStart = element.children[instagramPosts.length] as HTMLElement | undefined
+      const loopWidth = firstItem && loopStart ? loopStart.offsetLeft - firstItem.offsetLeft : 0
       if (!paused && !document.hidden && loopWidth > element.clientWidth) {
-        element.scrollLeft += delta * 0.018
+        element.scrollLeft += delta * 0.055
         if (element.scrollLeft >= loopWidth) element.scrollLeft -= loopWidth
       }
       frame = requestAnimationFrame(tick)
@@ -117,7 +126,7 @@ function InstagramCarousel() {
     setActive(closest % instagramPosts.length)
   }
 
-  return <div className="instagram-block" data-reveal><div className="instagram-heading"><div><span className="micro-label">Acompanhe de perto</span><h3>Na prática, em cada detalhe<span>.</span></h3><p>Conteúdo e bastidores da Dra. Raquel Borges no Instagram.</p></div><div className="carousel-controls" aria-label="Controles do Instagram"><span>{String(active + 1).padStart(2, '0')}<em>/</em>{String(instagramPosts.length).padStart(2, '0')}</span><button type="button" aria-label="Publicação anterior" onClick={() => rail.current?.scrollBy({ left: -350, behavior: 'smooth' })}>←</button><button type="button" aria-label="Próxima publicação" onClick={() => rail.current?.scrollBy({ left: 350, behavior: 'smooth' })}>→</button></div></div><div className="instagram-rail" ref={rail} onScroll={updatePosition} aria-label="Publicações do Instagram">{instagramCarouselPosts.map((id, index) => { const postIndex = index % instagramPosts.length; return <article className="instagram-card" key={`${id}-${index}`}><a className="instagram-tile" href={`https://www.instagram.com/p/${id}/`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('instagram_post_click', id)} aria-label={`Abrir publicação ${postIndex + 1} no Instagram`}><img src={instagramCovers[postIndex]} alt={`Publicação ${postIndex + 1} da Dra. Raquel Borges no Instagram`} loading="lazy" /></a></article> })}</div></div>
+  return <div className="instagram-block" data-reveal><div className="instagram-heading"><div><span className="micro-label">Acompanhe de perto</span><h3>Na prática, em cada detalhe<span>.</span></h3><p>Conteúdo e bastidores da Dra. Raquel Borges no Instagram.</p></div><div className="carousel-controls" aria-label="Controles do Instagram"><span>{String(active + 1).padStart(2, '0')}<em>/</em>{String(instagramPosts.length).padStart(2, '0')}</span><button type="button" aria-label="Publicação anterior" onClick={() => rail.current?.scrollBy({ left: -350, behavior: 'smooth' })}>←</button><button type="button" aria-label="Próxima publicação" onClick={() => rail.current?.scrollBy({ left: 350, behavior: 'smooth' })}>→</button></div></div><div className="instagram-rail" ref={rail} onScroll={updatePosition} aria-label="Publicações do Instagram">{instagramCarouselPosts.map((id, index) => { const postIndex = index % instagramPosts.length; return <article className="instagram-card" key={`${id}-${index}`}><a className="instagram-tile" href={`https://www.instagram.com/p/${id}/`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('instagram_post_click', id)} aria-label={`Abrir publicação ${postIndex + 1} no Instagram`}><video src={instagramVideos[postIndex]} poster={instagramCovers[postIndex]} autoPlay muted loop playsInline preload="metadata" onLoadedData={(event) => { event.currentTarget.play().catch(() => undefined) }} aria-label={`Vídeo da publicação ${postIndex + 1} da Dra. Raquel Borges`} /></a></article> })}</div></div>
 }
 
 function App() {
