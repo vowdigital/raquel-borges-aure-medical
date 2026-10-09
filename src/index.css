@@ -171,7 +171,8 @@ h1 em, h2 em, h3 em { color: #aaba9c; font-family: 'Playfair Display', serif; fo
 .footer-main div > a:not(.brand) { color: #c8d3c8; font-size: 14px; line-height: 1.75; margin-bottom: 10px; }
 .footer-main div > a:hover { color: #fff; }
 .footer-bottom { border-top: 1px solid #2c4240; color: #81998b; display: flex; flex-wrap: wrap; font-family: 'DM Mono', monospace; font-size: 11px; gap: 12px; justify-content: space-between; letter-spacing: .06em; line-height: 1.7; padding-top: 25px; }
-.footer-credit { color: #c7d7c5; transition: color .2s; }
+.footer-credit { align-items: center; color: #c7d7c5; display: inline-flex; transition: color .2s; }
+.footer-credit-logo { display: block; height: 18px; width: auto; }
 .footer-credit:hover { color: #fff; }
 .whatsapp-float { align-items: center; background: #dce9d6; bottom: 22px; border-radius: 4px; box-shadow: 0 10px 35px rgba(0,0,0,.23); color: #17352b; display: inline-flex; font-size: 13px; font-weight: 700; gap: 9px; letter-spacing: .03em; padding: 13px 17px; position: fixed; right: 22px; transition: transform .2s, background .25s; z-index: 15; }
 .whatsapp-float:hover { background: #bed2b7; transform: translateY(-3px); }
