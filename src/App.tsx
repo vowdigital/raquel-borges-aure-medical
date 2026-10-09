@@ -137,35 +137,14 @@ function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let removePointerListeners = () => {}
     const scope = gsap.context(() => {
       gsap.from('.hero-enter', { y: 28, opacity: 0, duration: 0.85, stagger: 0.12, ease: 'power3.out', delay: 0.12 })
       gsap.fromTo('.hero-photo', { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1.055, duration: 1.3, ease: 'power2.out' })
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((element) => {
         gsap.fromTo(element, { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 87%', end: 'bottom 18%', toggleActions: 'play reverse play reverse' } })
       })
-      gsap.to('.hero-photo', { yPercent: -14, scale: 1.15, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 } })
-      gsap.to('.hero-content', { y: 90, opacity: 0.28, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.1 } })
-      gsap.to('.closing', { backgroundPosition: '50% 68%', ease: 'none', scrollTrigger: { trigger: '.closing', start: 'top bottom', end: 'bottom top', scrub: 1.4 } })
-
-      const handlePointerMove = (event: PointerEvent) => {
-        const x = (event.clientX / window.innerWidth - 0.5) * 2
-        const y = (event.clientY / window.innerHeight - 0.5) * 2
-        gsap.to('.hero-photo', { x: x * 14, y: y * 10, duration: 1.1, ease: 'power3.out', overwrite: 'auto' })
-        gsap.to('.hero-content', { x: x * -5, duration: 1.1, ease: 'power3.out', overwrite: 'auto' })
-      }
-      const resetPointer = () => gsap.to(['.hero-photo', '.hero-content'], { x: 0, duration: 1, ease: 'power3.out', overwrite: 'auto' })
-      window.addEventListener('pointermove', handlePointerMove, { passive: true })
-      window.addEventListener('blur', resetPointer)
-      removePointerListeners = () => {
-        window.removeEventListener('pointermove', handlePointerMove)
-        window.removeEventListener('blur', resetPointer)
-      }
     }, site)
-    return () => {
-      removePointerListeners()
-      scope.revert()
-    }
+    return () => scope.revert()
   }, [])
 
   return <div ref={site} className="site-root"><header className="site-header shell"><div className="header-left"><Brand compact label="DRA. RAQUEL BORGES" /><nav className={`main-nav ${menuOpen ? 'main-nav-open' : ''}`} aria-label="Navegação principal"><a href="#sobre" onClick={() => setMenuOpen(false)}>A médica</a><a href="#resultados" onClick={() => setMenuOpen(false)}>Resultados</a><a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a><a href="#duvidas" onClick={() => setMenuOpen(false)}>Dúvidas</a><a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a></nav></div><div className="header-actions"><button className="menu-toggle" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button></div></header>
