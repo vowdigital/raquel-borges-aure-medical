@@ -211,7 +211,7 @@ h1 em, h2 em, h3 em { color: #aaba9c; font-family: 'Playfair Display', serif; fo
   .brand-header-label { font-size: 13px; letter-spacing: .05em; }
   .brand-words strong { font-size: 19px; }
   .header-actions .cta-button { display: none; }
-  .hero { background-image: none; display: flex; flex-direction: column; min-height: 0; padding-bottom: 0; padding-top: 0; }
+  .hero { background-image: none; display: flex; flex-direction: column; min-height: 0; padding-bottom: 0; padding-top: 78px; }
   .hero-content { max-width: 540px; order: 2; padding-block: 65px 75px; width: 100%; }
   .hero .section-tag { font-size: 11px; gap: 9px; }
   .hero h1 { font-size: clamp(50px, 13vw, 70px); margin-top: 29px; }
