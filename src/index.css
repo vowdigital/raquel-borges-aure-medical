@@ -248,9 +248,9 @@ h1 em, h2 em, h3 em { color: #aaba9c; font-family: 'Playfair Display', serif; fo
   .faq { gap: 44px; grid-template-columns: 1fr; padding-block: 90px; }
   .faq h2 { margin-block: 26px 16px; }
   .faq-item button { min-height: 70px; }
-  .closing { min-height: 0; padding-bottom: 350px; }
-  .closing-content { margin-left: 0; padding: 75px 0 65px; }
-  .closing { background-position: center 24%; }
+  .closing { --closing-image-height: clamp(300px, 96vw, 420px); background-color: #071719; background-image: none; min-height: 0; padding-bottom: 0; padding-top: var(--closing-image-height); }
+  .closing::before { background-image: linear-gradient(0deg, rgba(5,18,18,.58), transparent 62%), url('./assets/doctor-portrait.jpg'); background-position: center, center 24%; background-size: cover, cover; bottom: auto; height: var(--closing-image-height); }
+  .closing-content { background: #071719; margin-left: 0; padding: 75px 0 65px; }
   .map-section, .map-section iframe { min-height: 430px; height: 430px; }
   .site-footer { padding-block: 55px 24px; }
   .footer-main { gap: 35px; grid-template-columns: 1fr 1fr; padding-bottom: 35px; }
