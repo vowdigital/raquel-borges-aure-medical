@@ -127,6 +127,7 @@ function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let removePointerListeners = () => {}
     const scope = gsap.context(() => {
       gsap.from('.hero-enter', { y: 28, opacity: 0, duration: 0.85, stagger: 0.12, ease: 'power3.out', delay: 0.12 })
       gsap.fromTo('.hero-photo', { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1.055, duration: 1.3, ease: 'power2.out' })
@@ -146,12 +147,15 @@ function App() {
       const resetPointer = () => gsap.to(['.hero-photo', '.hero-content'], { x: 0, duration: 1, ease: 'power3.out', overwrite: 'auto' })
       window.addEventListener('pointermove', handlePointerMove, { passive: true })
       window.addEventListener('blur', resetPointer)
-      scope.add(() => {
+      removePointerListeners = () => {
         window.removeEventListener('pointermove', handlePointerMove)
         window.removeEventListener('blur', resetPointer)
-      })
+      }
     }, site)
-    return () => scope.revert()
+    return () => {
+      removePointerListeners()
+      scope.revert()
+    }
   }, [])
 
   return <div ref={site} className="site-root"><header className="site-header shell"><div className="header-left"><Brand compact label="DRA. RAQUEL BORGES" /><nav className={`main-nav ${menuOpen ? 'main-nav-open' : ''}`} aria-label="Navegação principal"><a href="#sobre" onClick={() => setMenuOpen(false)}>A médica</a><a href="#resultados" onClick={() => setMenuOpen(false)}>Resultados</a><a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a><a href="#duvidas" onClick={() => setMenuOpen(false)}>Dúvidas</a><a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a></nav></div><div className="header-actions"><button className="menu-toggle" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button></div></header>
