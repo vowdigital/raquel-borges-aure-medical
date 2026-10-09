@@ -125,7 +125,7 @@ h1 em, h2 em, h3 em { color: #aaba9c; font-family: 'Playfair Display', serif; fo
 .instagram-heading { align-items: end; display: flex; gap: 30px; justify-content: space-between; margin-bottom: 34px; }
 .instagram-heading h3 span { color: #a8bc9c; }
 .instagram-heading p { color: #a8baae; font-size: 15px; margin: 13px 0 0; }
-.carousel-controls { align-items: center; display: flex; gap: 8px; }
+.carousel-controls { display: none; }
 .carousel-controls > span { color: #e7eee2; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: .09em; margin-right: 17px; white-space: nowrap; }
 .carousel-controls em { color: #789483; font-style: normal; margin-inline: 5px; }
 .carousel-controls button { border: 1px solid #567064; color: #e2ede1; height: 42px; transition: background .2s; width: 42px; }

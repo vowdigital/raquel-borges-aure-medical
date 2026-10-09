@@ -29,7 +29,7 @@ const mapsEmbedUrl = 'https://www.google.com/maps?q=Rua%20Jos%C3%A9%20Maria%20Li
 const instagramPosts = ['DZFuXkkxMFy', 'DZDJjLJRLyL', 'DZ5HZauyYYl', 'DXEqgqLEVFy', 'DX9dpq8R1_I', 'DZlQDY9pdco']
 const instagramCovers = [postOne, postTwo, postThree, postFour, postFive, postSix]
 const instagramVideos = [videoOne, videoTwo, videoThree, videoFour, videoFive, videoSix]
-const instagramCarouselPosts = [...instagramPosts, ...instagramPosts]
+const instagramCarouselPosts = instagramPosts
 const questions = [
   { question: 'Quem pode fazer transplante capilar?', answer: 'A indicação depende de uma avaliação médica individual. É preciso entender a causa da perda capilar, o estado do couro cabeludo, a área doadora e as expectativas de cada pessoa.' },
   { question: 'Como funciona o procedimento?', answer: 'O planejamento define a estratégia mais adequada para o caso. Se houver indicação, a equipe explica as etapas do procedimento, os cuidados necessários e o acompanhamento previsto.' },
@@ -81,7 +81,7 @@ function WhatsAppButton({ children, source, light = false }: { children: string;
 
 function InstagramCarousel() {
   const rail = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(0)
+  const [active] = useState(0)
 
   useEffect(() => {
     const element = rail.current
@@ -91,15 +91,23 @@ function InstagramCarousel() {
     let paused = false
     const pause = () => { paused = true }
     const resume = () => { paused = false }
+    const recycleCards = () => {
+      const viewportLeft = element.getBoundingClientRect().left
+      const gap = Number.parseFloat(getComputedStyle(element).gap || '0')
+      let first = element.firstElementChild as HTMLElement | null
+      while (first && first.getBoundingClientRect().right <= viewportLeft) {
+        const cardWidth = first.getBoundingClientRect().width + gap
+        element.appendChild(first)
+        element.scrollLeft -= cardWidth
+        first = element.firstElementChild as HTMLElement | null
+      }
+    }
     const tick = (time: number) => {
       const delta = Math.min(time - lastTime, 50)
       lastTime = time
-      const firstItem = element.children[0] as HTMLElement | undefined
-      const loopStart = element.children[instagramPosts.length] as HTMLElement | undefined
-      const loopWidth = firstItem && loopStart ? loopStart.offsetLeft - firstItem.offsetLeft : 0
-      if (!paused && !document.hidden && loopWidth > element.clientWidth) {
+      if (!paused && !document.hidden && element.scrollWidth > element.clientWidth) {
         element.scrollLeft += delta * 0.055
-        if (element.scrollLeft >= loopWidth) element.scrollLeft -= loopWidth
+        recycleCards()
       }
       frame = requestAnimationFrame(tick)
     }
@@ -117,14 +125,7 @@ function InstagramCarousel() {
     }
   }, [])
 
-  function updatePosition() {
-    if (!rail.current) return
-    const items = [...rail.current.children].slice(0, instagramPosts.length) as HTMLElement[]
-    let closest = 0
-    let distance = Infinity
-    items.forEach((item, index) => { const delta = Math.abs(item.offsetLeft - rail.current!.scrollLeft - rail.current!.offsetLeft); if (delta < distance) { distance = delta; closest = index } })
-    setActive(closest % instagramPosts.length)
-  }
+  function updatePosition() {}
 
   return <div className="instagram-block" data-reveal><div className="instagram-heading"><div><span className="micro-label">Acompanhe de perto</span><h3>Na prática, em cada detalhe<span>.</span></h3><p>Conteúdo e bastidores da Dra. Raquel Borges no Instagram.</p></div><div className="carousel-controls" aria-label="Controles do Instagram"><span>{String(active + 1).padStart(2, '0')}<em>/</em>{String(instagramPosts.length).padStart(2, '0')}</span><button type="button" aria-label="Publicação anterior" onClick={() => rail.current?.scrollBy({ left: -350, behavior: 'smooth' })}>←</button><button type="button" aria-label="Próxima publicação" onClick={() => rail.current?.scrollBy({ left: 350, behavior: 'smooth' })}>→</button></div></div><div className="instagram-rail" ref={rail} onScroll={updatePosition} aria-label="Publicações do Instagram">{instagramCarouselPosts.map((id, index) => { const postIndex = index % instagramPosts.length; return <article className="instagram-card" key={`${id}-${index}`}><a className="instagram-tile" href={`https://www.instagram.com/p/${id}/`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('instagram_post_click', id)} aria-label={`Abrir publicação ${postIndex + 1} no Instagram`}><video src={instagramVideos[postIndex]} poster={instagramCovers[postIndex]} autoPlay muted loop playsInline preload="metadata" onLoadedData={(event) => { event.currentTarget.play().catch(() => undefined) }} aria-label={`Vídeo da publicação ${postIndex + 1} da Dra. Raquel Borges`} /></a></article> })}</div></div>
 }
