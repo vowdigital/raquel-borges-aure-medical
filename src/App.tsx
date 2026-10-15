@@ -50,12 +50,15 @@ function trackEvent(name: string, source: string) {
   analyticsWindow.gtag?.('event', name, { event_category: 'engagement', event_label: source })
 }
 
+const whatsappMessage = 'Olá! Vim pelo site e gostaria de agendar uma avaliação de transplante capilar com a Dra. Raquel.'
+const whatsappBaseUrl = `https://wa.me/${contactNumber}?text=${encodeURIComponent(whatsappMessage)}`
+
 function whatsappUrl(source: string) {
   const params = new URLSearchParams(window.location.search)
   const campaign = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
     .map((key) => params.get(key) ? `${key}=${params.get(key)}` : '')
     .filter(Boolean).join(' | ')
-  const message = `Olá! Vim pela landing page da Auré Medical e gostaria de agendar uma avaliação capilar com a Dra. Raquel Borges.${campaign ? ` Origem: ${campaign}.` : ''}`
+  const message = `${whatsappMessage}${campaign ? ` Origem: ${campaign}.` : ''}`
   trackEvent('whatsapp_click', source)
   return `https://wa.me/${contactNumber}?text=${encodeURIComponent(message)}`
 }
@@ -77,7 +80,7 @@ function SectionTag({ index, children, light = false }: { index: string; childre
 }
 
 function WhatsAppButton({ children, source, light = false }: { children: string; source: string; light?: boolean }) {
-  return <a className={`cta-button ${light ? 'cta-button-light' : ''}`} href={`https://wa.me/${contactNumber}`} onClick={(event) => { event.currentTarget.href = whatsappUrl(source) }} target="_blank" rel="noopener noreferrer"><img className="whatsapp-button-icon" src={whatsappIcon} alt="" aria-hidden="true" /><span>{children}</span><ArrowIcon /></a>
+  return <a className={`cta-button ${light ? 'cta-button-light' : ''}`} href={whatsappBaseUrl} onClick={(event) => { event.currentTarget.href = whatsappUrl(source) }} target="_blank" rel="noopener noreferrer"><img className="whatsapp-button-icon" src={whatsappIcon} alt="" aria-hidden="true" /><span>{children}</span><ArrowIcon /></a>
 }
 
 function InstagramCarousel() {
@@ -163,13 +166,13 @@ function App() {
       <section id="contato" className="closing shell"><div className="closing-content" data-reveal><SectionTag index="04">SEU PRÓXIMO PASSO</SectionTag><h2>Seu próximo capítulo começa com uma <em>boa conversa.</em></h2><p>Converse com a equipe da Auré Medical e agende uma avaliação capilar com a Dra. Raquel Borges.</p><WhatsAppButton source="final" light>Agendar minha consulta</WhatsAppButton><small>ATENDIMENTO EM SÃO PAULO · JARDIM PAULISTA</small></div></section>
     </main>
     <section className="map-section" aria-label="Localização da Auré Medical"><iframe src={mapsEmbedUrl} title="Mapa da localização da Auré Medical no Jardim Paulista" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></section>
-    <footer className="site-footer shell"><div className="footer-main"><div><Brand inverse /><p>Medicina próxima. Visão inteira.<br />Cuidado capilar com ciência, escuta e naturalidade.</p></div><div><span>EXPLORE</span><a href="#sobre">A médica</a><a href="#resultados">Resultados</a><a href="#instagram">Instagram</a><a href="#duvidas">Dúvidas</a><a href="#contato">Contato</a></div><div><span>CONTATO</span><a href="https://maps.google.com/?q=Rua+Jose+Maria+Lisboa+860+Jardim+Paulista+Sao+Paulo" target="_blank" rel="noopener noreferrer">Rua José Maria Lisboa, 860 · 4º andar<br />Jardim Paulista, São Paulo/SP</a><a href={`https://wa.me/${contactNumber}`} onClick={(event) => { event.currentTarget.href = whatsappUrl('footer') }} target="_blank" rel="noopener noreferrer">+55 (11) 97104-0525</a><a href="https://www.instagram.com/raquelborges.dra/" target="_blank" rel="noopener noreferrer">@raquelborges.dra ↗</a></div></div><div className="footer-bottom"><span>© 2026 AURÉ MEDICAL · CNPJ 60.519.638/0001-65</span><span>DRA. RAQUEL BORGES · CRM/SP 252636 · CRM/PA 21355</span><span>CONTEÚDO INFORMATIVO. NÃO SUBSTITUI CONSULTA MÉDICA.</span><span>Desenvolvido por <a className="footer-credit" href="https://sites.vowdigital.com.br" target="_blank" rel="noopener noreferrer" aria-label="Vow Digital"><img className="footer-credit-logo" src={vowLogo} alt="Vow Digital" /></a></span></div></footer>
+    <footer className="site-footer shell"><div className="footer-main"><div><Brand inverse /><p>Medicina próxima. Visão inteira.<br />Cuidado capilar com ciência, escuta e naturalidade.</p></div><div><span>EXPLORE</span><a href="#sobre">A médica</a><a href="#resultados">Resultados</a><a href="#instagram">Instagram</a><a href="#duvidas">Dúvidas</a><a href="#contato">Contato</a></div><div><span>CONTATO</span><a href="https://maps.google.com/?q=Rua+Jose+Maria+Lisboa+860+Jardim+Paulista+Sao+Paulo" target="_blank" rel="noopener noreferrer">Rua José Maria Lisboa, 860 · 4º andar<br />Jardim Paulista, São Paulo/SP</a><a href={whatsappBaseUrl} onClick={(event) => { event.currentTarget.href = whatsappUrl('footer') }} target="_blank" rel="noopener noreferrer">+55 (11) 97104-0525</a><a href="https://www.instagram.com/raquelborges.dra/" target="_blank" rel="noopener noreferrer">@raquelborges.dra ↗</a></div></div><div className="footer-bottom"><span>© 2026 AURÉ MEDICAL · CNPJ 60.519.638/0001-65</span><span>DRA. RAQUEL BORGES · CRM/SP 252636 · CRM/PA 21355</span><span>CONTEÚDO INFORMATIVO. NÃO SUBSTITUI CONSULTA MÉDICA.</span><span>Desenvolvido por <a className="footer-credit" href="https://sites.vowdigital.com.br" target="_blank" rel="noopener noreferrer" aria-label="Vow Digital"><img className="footer-credit-logo" src={vowLogo} alt="Vow Digital" /></a></span></div></footer>
     <WhatsAppFloat />
   </div>
 }
 
 function WhatsAppFloat() {
-  return <a className="whatsapp-float" href={`https://wa.me/${contactNumber}`} onClick={(event) => { event.currentTarget.href = whatsappUrl('floating') }} target="_blank" rel="noopener noreferrer" aria-label="Agendar minha consulta"><img src={whatsappIcon} alt="" aria-hidden="true" /><span>Agendar minha consulta</span></a>
+  return <a className="whatsapp-float" href={whatsappBaseUrl} onClick={(event) => { event.currentTarget.href = whatsappUrl('floating') }} target="_blank" rel="noopener noreferrer" aria-label="Agendar minha consulta"><img src={whatsappIcon} alt="" aria-hidden="true" /><span>Agendar minha consulta</span></a>
 }
 
 export default App
